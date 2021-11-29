@@ -21,17 +21,20 @@ export default function Posts(props) {
   const [offset, setOffset] = useState(1);
   useEffect(() => {
     setOffset(offset);
-  }, [offset])
+  }, [offset]);
 
   const { loading, data, error, refetch } = useQuery(PostsQueries.getPosts, {
     variables: {
       offset: offset,
     },
   });
+  useEffect(() => {
+    refetch();
+  }, [data]);
+  useEffect(() => {
+    refetch();
+  }, []);
   const [deletePost] = useMutation(PostsQueries.deletePost);
-  // useEffect(() => {
-  //     refetch();
-  // }, [data]);
   if (loading)
     return (
       <div>
@@ -42,7 +45,7 @@ export default function Posts(props) {
     );
   if (error) return <p>{error.message}</p>;
 
-  const addPost = () => {
+  const addPost = async () => {
     navigate("/addpost");
   };
   const handlePageClick = (e) => {
@@ -59,11 +62,11 @@ export default function Posts(props) {
         deletePostId: parseInt(id),
       },
     });
-    
+    refetch();
     if (data.posts.post.length === 1) {
       setOffset(1);
+      refetch();
     }
-    refetch();
   };
   return (
     <div>
@@ -74,25 +77,27 @@ export default function Posts(props) {
         {data.posts.post.map((post) => (
           <div>
             <Card body>
-              <div className="card-flex">
-                <div className="left-align">
-                  <CardTitle tag="h5">{post.title}</CardTitle>
-                  <CardText>{post.body}</CardText>
-                </div>
-                <div className="flex-center">
-                  <Link to={{ pathname: `/editpost/${post.id}` }}>
+              <Link to={{ pathname: `/${post.id}` }}>
+                <div className="card-flex">
+                  <div className="left-align">
+                    <CardTitle tag="h5">{post.userId}</CardTitle>
+                    <CardText>{post.title}</CardText>
+                  </div>
+                  <div className="flex-center">
+                    <Link to={{ pathname: `/editpost/${post.id}` }}>
+                      <CardText>
+                        <ButtonComponent value="Update" onClick={updatePost} />
+                      </CardText>
+                    </Link>
                     <CardText>
-                      <ButtonComponent value="Update" onClick={updatePost} />
+                      <ButtonComponent
+                        value="Delete"
+                        onClick={() => removePost(post.id)}
+                      />
                     </CardText>
-                  </Link>
-                  <CardText>
-                    <ButtonComponent
-                      value="Delete"
-                      onClick={() => removePost(post.id)}
-                    />
-                  </CardText>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </Card>
           </div>
         ))}

@@ -9,6 +9,7 @@ export const PostsQueries = {
           id
           title
           body
+          userId
         }
       }
     }
@@ -21,26 +22,37 @@ export const PostsQueries = {
     }
   `,
   updatePost: gql`
-  mutation($updatePostId: ID!, $postInput: PostInput){
-  updatePost(id: $updatePostId,postInput: $postInput) {
-    body
-  }
-}
+    mutation ($updatePostId: ID!, $postInput: PostInput) {
+      updatePost(id: $updatePostId, postInput: $postInput) {
+        body
+      }
+    }
   `,
-  getPost : gql`
-  query($postId: ID!){
-  post(id: $postId) {
-    body
-    title
-    id
-    userId
-  }
-}
+  getPost: gql`
+    query ($postId: ID!) {
+      post(id: $postId) {
+        body
+        title
+        id
+        userId
+        type
+      }
+    }
   `,
-  deletePost : gql`
-  mutation($deletePostId: ID!){
-  deletePost(id: $deletePostId) {
-   body
- }
-}`
+  deletePost: gql`
+    mutation ($deletePostId: ID!) {
+      deletePost(id: $deletePostId) {
+        body
+      }
+    }
+  `,
+  addPayment: gql`
+    mutation ($paymentInput: payment) {
+      addPayment(paymentInput: $paymentInput) {
+        amount
+        currency
+        token
+      }
+    }
+  `
 };

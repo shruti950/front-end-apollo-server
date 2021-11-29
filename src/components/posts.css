@@ -59,6 +59,8 @@
 
 .left-align{
   text-align: left;
+  color: black;
+  text-decoration: none;
 }
 .flex-center{
   display: flex;
